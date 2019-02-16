@@ -20,18 +20,22 @@ public class WeaponsInitializer {
                 .version(47L)
                 .strongAgainstElements(Arrays.asList(Element.WATER, Element.NEUTRAL))
                 .weakAgainstElements(Collections.singletonList(Element.AIR))
-                .neutralElements(Arrays.asList(Element.FIRE, Element.EARTH, Element.ELECTICITY))
+                .neutralElements(Arrays.asList(Element.FIRE, Element.EARTH, Element.ELECTRICITY))
                 .build());
 
         gameWeapons.add(Weapon.builder()
                 .code("LG")
                 .damage(7.5D)
                 .name("Lighting Gun")
-                .element(Element.ELECTICITY)
+                .element(Element.ELECTRICITY)
                 .shortsPerSecond(100)
                 .version(1L)
                 .strongAgainstElements(Arrays.asList(Element.WATER, Element.NEUTRAL))
                 .weakAgainstElements(Arrays.asList(Element.AIR, Element.FIRE, Element.EARTH))
                 .build());
+    }
+
+    public void destroy() {
+        gameWeapons.clear();
     }
 }

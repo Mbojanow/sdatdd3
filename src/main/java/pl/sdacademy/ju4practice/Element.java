@@ -5,6 +5,6 @@ public enum Element {
     FIRE,
     EARTH,
     AIR,
-    ELECTICITY,
+    ELECTRICITY,
     NEUTRAL
 }
