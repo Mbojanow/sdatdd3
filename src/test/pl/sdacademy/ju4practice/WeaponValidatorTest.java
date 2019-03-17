@@ -19,16 +19,16 @@ class WeaponValidatorTest {
   // każdu jest użyty tylko raz
 
   private WeaponValidator weaponValidator;
+  private Weapon weapon;
 
   @BeforeEach
   void setUp() {
     weaponValidator = new WeaponValidator();
+    weapon = createCorrectWeapon();
   }
 
   @Test
   void shouldValidateCorrectWeapon() {
-    final Weapon weapon = createCorrectWeapon();
-
     final boolean isValid = weaponValidator.isValid(weapon);
 
     assertThat(isValid).isTrue();
@@ -36,22 +36,18 @@ class WeaponValidatorTest {
 
   @Test
   void shouldThrowExceptionWhenDamageIsNegative() {
-    final Weapon weapon = createCorrectWeapon();
     weapon.setBaseDamage(-2);
 
-    final Throwable exp = assertThrows(InvalidWeaponException.class,
-        () -> weaponValidator.isValid(weapon));
+    final Throwable exp = assertInvalidWeaponExceptionThrownDuringValidation();
 
     assertThat(exp.getMessage()).isEqualTo("Base damage should be positive");
   }
 
   @Test
   void shouldThrowWhenNameLessThatThreeChars() {
-    final Weapon weapon = createCorrectWeapon();
     weapon.setName("as");
 
-    final Throwable exp = assertThrows(InvalidWeaponException.class,
-        () -> weaponValidator.isValid(weapon));
+    final Throwable exp = assertInvalidWeaponExceptionThrownDuringValidation();
 
     assertThat(exp.getMessage())
         .isEqualTo("Weapon name should be longer than 3 chars");
@@ -59,11 +55,9 @@ class WeaponValidatorTest {
 
   @Test
   void shouldThrowWhenBaseDamageIsNull() {
-    final Weapon weapon = createCorrectWeapon();
     weapon.setBaseDamage(null);
 
-    final Throwable exp = assertThrows(InvalidWeaponException.class,
-        () -> weaponValidator.isValid(weapon));
+    final Throwable exp = assertInvalidWeaponExceptionThrownDuringValidation();
 
     assertThat(exp.getMessage())
         .isEqualTo("Weapon base damage should not be null");
@@ -71,11 +65,9 @@ class WeaponValidatorTest {
 
   @Test
   void shouldThrowWhenArmorTypeMissing() {
-    final Weapon weapon = createCorrectWeapon();
     weapon.setBadAgainst(new ArrayList<>());
 
-    final Throwable exp = assertThrows(InvalidWeaponException.class,
-        () -> weaponValidator.isValid(weapon));
+    final Throwable exp = assertInvalidWeaponExceptionThrownDuringValidation();
 
     assertThat(exp.getMessage())
         .isEqualTo("Armor type missing");
@@ -83,14 +75,12 @@ class WeaponValidatorTest {
 
   @Test
   void shouldThrowWhenArmorTypeDuplicatedInList() {
-    final Weapon weapon = createCorrectWeapon();
     final List<ArmorType> armorTypes = new ArrayList<>();
     armorTypes.add(ArmorType.GOLD);
     armorTypes.add(ArmorType.GOLD);
     weapon.setBadAgainst(armorTypes);
 
-    final Throwable exp = assertThrows(InvalidWeaponException.class,
-        () -> weaponValidator.isValid(weapon));
+    final Throwable exp = assertInvalidWeaponExceptionThrownDuringValidation();
 
     assertThat(exp.getMessage())
         .isEqualTo("Armor type duplicated");
@@ -98,21 +88,24 @@ class WeaponValidatorTest {
 
   @Test
   void shouldThrowWhenArmorTypeDuplicatedInSeparateLists() {
-    final Weapon weapon = createCorrectWeapon();
     final List<ArmorType> armorTypes = new ArrayList<>();
     armorTypes.add(ArmorType.GOLD);
     armorTypes.add(ArmorType.BLUE);
     weapon.setBadAgainst(armorTypes);
 
-    final Throwable exp = assertThrows(InvalidWeaponException.class,
-        () -> weaponValidator.isValid(weapon));
+    final Throwable exp = assertInvalidWeaponExceptionThrownDuringValidation();
 
     assertThat(exp.getMessage())
         .isEqualTo("Armor type duplicated");
   }
 
+  private Throwable assertInvalidWeaponExceptionThrownDuringValidation() {
+    return assertThrows(InvalidWeaponException.class,
+        () -> weaponValidator.isValid(weapon));
+  }
+
   private Weapon createCorrectWeapon() {
-    final Weapon weapon = new Weapon();
+    weapon = new Weapon();
     weapon.setBaseDamage(12);
     weapon.setName("Spitfire");
     weapon.setAmmoType(AmmoType.HEAVY);
